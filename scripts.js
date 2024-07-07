@@ -29,8 +29,8 @@ function createThemeElement(themeData) {
     
     const creatorsList = themeData.createdBy.map(creatorId => {
         const creator = window.creators.find(c => c.id === creatorId);
-        return creator ? creator.displayName : '';
-    }).join(', ');
+        return creator ? `<img src="${creator.avatarUrl}" alt="${creator.displayName}" title="${creator.displayName}">` : '';
+    }).join('');
 
     themeElement.innerHTML = `
         <img src="${themeData.image}" alt="${themeData.name}">
@@ -38,7 +38,7 @@ function createThemeElement(themeData) {
         <div class="download-links">
             <a href="${themeData.downloadLinks[0].url}" target="_blank" class="download-link">${themeData.downloadLinks[0].label}</a>
         </div>
-        <p class="theme-creator">Created by: ${creatorsList}</p>
+        <div class="creator-avatars">${creatorsList}</div>
     `;
 
     return themeElement;
