@@ -1,0 +1,13 @@
+{
+    "id": "2",
+    "name": "Huevo Pretendo",
+    "image": "images/theme2.png",
+    "description": "This is the description for Huevo Pretendo.",
+    "downloadLinks": [
+        {
+            "label": "Download Huevo Pretendo",
+            "url": "https://example.com/themes/theme2.zip"
+        }
+    ],
+    "createdBy": ["3"]
+}

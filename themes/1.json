@@ -1,0 +1,13 @@
+{
+    "id": "1",
+    "name": "Pretendo White",
+    "image": "images/theme1.png",
+    "description": "This is the description for Pretendo White.",
+    "downloadLinks": [
+        {
+            "label": "Download Pretendo White",
+            "url": "https://example.com/themes/theme1.zip"
+        }
+    ],
+    "createdBy": ["1", "2"]
+}

@@ -1,61 +1,45 @@
 document.addEventListener('DOMContentLoaded', () => {
-    fetchThemes();
-    fetchCreators();
-});
-
-function fetchThemes() {
-    fetch('themes.json') // Adjust the path as per your file structure
-        .then(response => {
-            if (!response.ok) {
-                throw new Error(`HTTP error! Status: ${response.status}`);
-            }
-            return response.json();
-        })
-        .then(themesData => {
-            console.log('Themes data:', themesData);
-            displayThemes(themesData.themes);
-        })
-        .catch(error => console.error('Error fetching themes:', error));
-}
-
-function fetchCreators() {
-    fetch('creators.json') // Adjust the path as per your file structure
-        .then(response => {
-            if (!response.ok) {
-                throw new Error(`HTTP error! Status: ${response.status}`);
-            }
-            return response.json();
-        })
+    fetch('creators.json')
+        .then(response => response.json())
         .then(creatorsData => {
-            console.log('Creators data:', creatorsData);
             window.creators = creatorsData.creators || [];
-            displayThemes(window.themes); // Display themes again after loading creators
+            loadThemes();
         })
         .catch(error => console.error('Error fetching creators:', error));
+});
+
+function loadThemes() {
+    const themeGrid = document.getElementById('theme-grid');
+    const themeIds = ['1', '2']; // Add more theme IDs as necessary
+
+    themeIds.forEach(themeId => {
+        fetch(`themes/${themeId}.json`)
+            .then(response => response.json())
+            .then(themeData => {
+                const themeElement = createThemeElement(themeData);
+                themeGrid.appendChild(themeElement);
+            })
+            .catch(error => console.error(`Error fetching data for theme ${themeId}:`, error));
+    });
 }
 
-function displayThemes(themes) {
-    const themesContainer = document.querySelector('.theme-grid');
-    themesContainer.innerHTML = ''; // Clear existing themes
+function createThemeElement(themeData) {
+    const themeElement = document.createElement('div');
+    themeElement.classList.add('theme');
+    
+    const creatorsList = themeData.createdBy.map(creatorId => {
+        const creator = window.creators.find(c => c.id === creatorId);
+        return creator ? creator.displayName : '';
+    }).join(', ');
 
-    themes.forEach(theme => {
-        const creatorsList = theme.createdBy.map(creatorId => {
-            const creator = window.creators.find(c => c.id === creatorId);
-            return creator ? creator.displayName : '';
-        }).join(', ');
+    themeElement.innerHTML = `
+        <img src="${themeData.image}" alt="${themeData.name}">
+        <h2>${themeData.name}</h2>
+        <div class="download-links">
+            <a href="${themeData.downloadLinks[0].url}" target="_blank" class="download-link">${themeData.downloadLinks[0].label}</a>
+        </div>
+        <p class="theme-creator">Created by: ${creatorsList}</p>
+    `;
 
-        const themeElement = document.createElement('div');
-        themeElement.classList.add('theme');
-
-        themeElement.innerHTML = `
-            <img src="${theme.image}" alt="${theme.name}">
-            <h2>${theme.name}</h2>
-            <div class="download-links">
-                <a href="${theme.downloadLinks[0].url}" target="_blank" class="download-link">${theme.downloadLinks[0].label}</a>
-            </div>
-            <p class="theme-creator">Created by: ${creatorsList}</p>
-        `;
-
-        themesContainer.appendChild(themeElement);
-    });
+    return themeElement;
 }
