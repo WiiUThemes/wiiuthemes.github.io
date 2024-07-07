@@ -92,3 +92,19 @@ main {
     border: 2px solid #fff;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
+
+/* Info text */
+.info-text {
+    font-size: 1.2em;
+    margin: 20px 0;
+    text-align: center;
+}
+
+.info-text a {
+    color: #007bff;
+    text-decoration: none;
+}
+
+.info-text a:hover {
+    text-decoration: underline;
+}
