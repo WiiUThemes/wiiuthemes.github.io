@@ -6,6 +6,7 @@ body {
     box-sizing: border-box;
     background-color: #f8f9fa;
     color: #333;
+    text-align: center;
 }
 
 /* Header styles */
@@ -39,6 +40,7 @@ main {
     overflow: hidden;
     width: 300px;
     transition: transform 0.3s;
+    position: relative;
 }
 
 .theme:hover {
@@ -89,13 +91,4 @@ main {
     border-radius: 50%;
     border: 2px solid #fff;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-/* Footer styles */
-footer {
-    background-color: #333;
-    color: #fff;
-    text-align: center;
-    padding: 10px;
-    margin-top: 20px;
 }
