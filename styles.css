@@ -41,6 +41,7 @@ main {
     width: 300px;
     transition: transform 0.3s;
     position: relative;
+    padding-top: 40px; /* Ensure space for creator avatars */
 }
 
 .theme:hover {
@@ -79,8 +80,8 @@ main {
 /* Creator avatars */
 .creator-avatars {
     position: absolute;
-    bottom: 10px;
-    right: 10px;
+    top: 10px; /* Move to top */
+    right: 10px; /* Adjust to right corner */
     display: flex;
     gap: 5px;
 }
