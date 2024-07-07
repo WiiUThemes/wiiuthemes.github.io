@@ -1,4 +1,22 @@
 document.addEventListener('DOMContentLoaded', () => {
+    fetch('creators.json')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log('Creators data:', data); // Log creators data to check if fetched correctly
+            window.creators = data.creators || []; // Store creators globally for use in displayTheme
+            fetchThemes();
+        })
+        .catch(error => {
+            console.error('Error fetching creators:', error);
+        });
+});
+
+function fetchThemes() {
     fetch('themes/index.json')
         .then(response => {
             if (!response.ok) {
@@ -26,7 +44,7 @@ document.addEventListener('DOMContentLoaded', () => {
         .catch(error => {
             console.error('Error fetching theme index:', error);
         });
-});
+}
 
 function displayTheme(themeData) {
     const themeGrid = document.querySelector('.theme-grid');
@@ -51,17 +69,3 @@ function displayTheme(themeData) {
 
     themeGrid.appendChild(themeElement);
 }
-
-fetch('creators.json')
-    .then(response => {
-        if (!response.ok) {
-            throw new Error(`HTTP error! Status: ${response.status}`);
-        }
-        return response.json();
-    })
-    .then(data => {
-        window.creators = data.creators || [];
-    })
-    .catch(error => {
-        console.error('Error fetching creators:', error);
-    });
