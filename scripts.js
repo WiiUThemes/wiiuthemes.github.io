@@ -1,47 +1,57 @@
 document.addEventListener('DOMContentLoaded', () => {
+    const themes = document.querySelectorAll('.theme');
+    
+    themes.forEach(theme => {
+        const themeId = theme.getAttribute('data-theme');
+        fetch(`themes/${themeId}.json`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(themeData => {
+                displayThemeData(theme, themeData);
+            })
+            .catch(error => {
+                console.error(`Error fetching data for theme ${themeId}:`, error);
+                // Optionally handle error display or fallback content
+            });
+    });
+
     fetch('creators.json')
-        .then(response => response.json())
-        .then(creatorsData => {
-            window.creators = creatorsData.creators || [];
-            loadThemes();
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log('Creators data:', data); // Log creators data to check if fetched correctly
+            window.creators = data.creators || []; // Store creators globally for use in displayThemeData
         })
         .catch(error => console.error('Error fetching creators:', error));
 });
 
-function loadThemes() {
-    const themeGrid = document.getElementById('theme-grid');
-    const themeIds = ['1', '2']; // Add more theme IDs as necessary
+function displayThemeData(themeElement, themeData) {
+    console.log('Theme data:', themeData); // Log theme data to check if received correctly
 
-    themeIds.forEach(themeId => {
-        fetch(`themes/${themeId}.json`)
-            .then(response => response.json())
-            .then(themeData => {
-                const themeElement = createThemeElement(themeData);
-                themeGrid.appendChild(themeElement);
-            })
-            .catch(error => console.error(`Error fetching data for theme ${themeId}:`, error));
-    });
-}
+    const downloadLinksHtml = themeData.downloadLinks.map(link => `
+        <a href="${link.url}" target="_blank" class="download-link">Download</a>
+    `).join('');
 
-function createThemeElement(themeData) {
-    const themeElement = document.createElement('div');
-    themeElement.classList.add('theme');
+    themeElement.querySelector('.download-links').innerHTML = downloadLinksHtml;
 
-    const creatorsList = themeData.createdBy.map(creatorId => {
-        const creator = window.creators.find(c => c.id === creatorId);
-        return creator ? `<img src="${creator.avatarUrl}" alt="${creator.displayName}" title="${creator.displayName}">` : '';
-    }).join('');
+    // Display creators if available
+    if (themeData.createdBy && themeData.createdBy.length > 0) {
+        const creatorsList = themeData.createdBy.map(creatorId => {
+            const creator = window.creators.find(c => c.id === creatorId);
+            return creator ? creator.displayName : '';
+        }).join(', ');
 
-    themeElement.innerHTML = `
-        <img src="${themeData.image}" alt="${themeData.name}">
-        <div class="theme-info">
-            <h2>${themeData.name}</h2>
-            <div class="download-links">
-                <a href="${themeData.downloadLinks[0].url}" target="_blank" class="download-link">${themeData.downloadLinks[0].label}</a>
-            </div>
-        </div>
-        <div class="creator-avatars">${creatorsList}</div>
-    `;
-
-    return themeElement;
+        const creatorElement = themeElement.querySelector('.theme-creator');
+        if (creatorElement) {
+            creatorElement.textContent = `Created by: ${creatorsList}`;
+        }
+    }
 }
