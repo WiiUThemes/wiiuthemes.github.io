@@ -1,12 +1,12 @@
 {
     "id": "2",
-    "name": "Huevo Pretendo",
-    "image": "images/theme2.png",
-    "description": "This is the description for Huevo Pretendo.",
+    "name": "Pokemon Emerald (Animated)",
+    "image": "images/theme2.mp4",
+    "description": "This is the description for Pokemon Emerald (Animated).",
     "downloadLinks": [
         {
-            "label": "Download Huevo Pretendo",
-            "url": "https://example.com/themes/theme2.zip"
+            "label": "Download Pokemon Emerald (Animated)",
+            "url": "https://fastupload.io/cffe0c3b4200aa15"
         }
     ],
     "createdBy": ["3"]
