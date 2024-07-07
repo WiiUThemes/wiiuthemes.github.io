@@ -21,7 +21,11 @@ document.addEventListener('DOMContentLoaded', () => {
             });
     }
 
-    function displayThemeData(themeElement, themeData, creators) {
+    function displayThemeData(themeData, creators) {
+        const themeElement = document.createElement('div');
+        themeElement.className = 'theme';
+        themeElement.setAttribute('data-theme', themeData.id);
+
         const downloadLinksHtml = themeData.downloadLinks.map(link => `
             <a href="${link.url}" target="_blank" class="download-link">Download</a>
         `).join('');
@@ -41,8 +45,12 @@ document.addEventListener('DOMContentLoaded', () => {
         themeGrid.appendChild(themeElement);
     }
 
-    function loadThemes(creators) {
-        fetch('themes/index.json')
+    function loadThemes() {
+        fetchCreatorsData()
+            .then(data => {
+                window.creators = data.creators || [];
+                return fetch('themes/index.json');
+            })
             .then(response => {
                 if (!response.ok) {
                     throw new Error(`HTTP error! Status: ${response.status}`);
@@ -50,31 +58,18 @@ document.addEventListener('DOMContentLoaded', () => {
                 return response.json();
             })
             .then(themeIndex => {
-                themeIndex.forEach(themeId => {
-                    const themeElement = document.createElement('div');
-                    themeElement.className = 'theme';
-                    themeElement.setAttribute('data-theme', themeId);
-
-                    fetchThemeData(themeId)
-                        .then(themeData => {
-                            displayThemeData(themeElement, themeData, creators);
-                        })
-                        .catch(error => {
-                            console.error(`Error fetching data for theme ${themeId}:`, error);
-                        });
+                const themePromises = themeIndex.map(themeId => fetchThemeData(themeId));
+                return Promise.all(themePromises);
+            })
+            .then(themes => {
+                themes.forEach(themeData => {
+                    displayThemeData(themeData, window.creators);
                 });
             })
             .catch(error => {
-                console.error('Error fetching theme index:', error);
+                console.error('Error loading themes:', error);
             });
     }
 
-    fetchCreatorsData()
-        .then(data => {
-            window.creators = data.creators || [];
-            loadThemes(window.creators);
-        })
-        .catch(error => {
-            console.error('Error fetching creators:', error);
-        });
+    loadThemes();
 });
