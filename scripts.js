@@ -47,7 +47,7 @@ function fetchThemes() {
 }
 
 function displayTheme(themeData) {
-    const themeGrid = document.querySelector('.theme-grid');
+    const themeGrid = document.querySelector('theme-grid');
 
     const creatorsList = themeData.createdBy.map(creatorId => {
         const creator = window.creators.find(c => c.id === creatorId);
